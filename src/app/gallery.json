@@ -1,0 +1,193 @@
+{
+    "Sonic": {
+        "dir": "/public/stages/sonic/",
+        "img": "/icons/SonicMap.png",
+        "subs": [
+            {
+                "name": "City Escape",
+                "dir": "city-escape",
+                "img": "/icons/levels/city_escape_available.png"
+            },
+            {
+                "name": "Metal Harbor",
+                "dir": "metal-harbor",
+                "img": "/icons/levels/metal_harbor_available.png"
+            },
+            {
+                "name": "Green Forest",
+                "dir": "green-forest",
+                "img": "/icons/levels/green_forest_available.png"
+            },
+            {
+                "name": "Pyramid Cave",
+                "dir": "pyramid-cave",
+                "img": "/icons/levels/pyramid_cave_available.png"
+            },
+            {
+                "name": "Crazy Gadget",
+                "dir": "crazy-gadget",
+                "img": "/icons/levels/crazy_gadget_available.png"
+            },
+            {
+                "name": "Final Rush",
+                "dir": "final-rush",
+                "img": "/icons/levels/final_rush_available.png"
+            },
+            {
+                "name": "Green Hill",
+                "dir": "green-hill",
+                "img": "/icons/levels/green_hill_available.png"
+            }
+        ]
+    },
+    "Tails": {
+        "dir": "/public/stages/tails/",
+        "img": "/icons/TailsMap.png",
+        "subs": [
+            {
+                "name": "Prison Lane",
+                "dir": "prison-lane",
+                "img": "/icons/levels/prison_lane_available.png"
+            },
+            {
+                "name": "Mission Street",
+                "dir": "mission-street",
+                "img": "/icons/levels/mission_street_available.png"
+            },
+            {
+                "name": "Route 101",
+                "dir": "route-101",
+                "img": "/icons/levels/route_101_available.png"
+            },
+            {
+                "name": "Hidden Base",
+                "dir": "hidden-base",
+                "img": "/icons/levels/hidden_base_available.png"
+            },
+            {
+                "name": "Eternal Engine",
+                "dir": "eternal-engine",
+                "img": "/icons/levels/eternal_engine_available.png"
+            }
+        ]
+    },
+    "Knuckles": {
+        "dir": "/public/stages/knuckles/",
+        "img": "/icons/KnucklesMap.png",
+        "subs": [
+            {
+                "name": "Wild Canyon",
+                "dir": "wild-canyon",
+                "img": "/icons/levels/wild_canyon_available.png"
+            },
+            {
+                "name": "Pumpkin Hill",
+                "dir": "pumpkin-hill",
+                "img": "/icons/levels/pumpkin_hill_available.png"
+            },
+            {
+                "name": "Aquatic Mine",
+                "dir": "aquatic-mine",
+                "img": "/icons/levels/aquatic_mine_available.png"
+            },
+            {
+                "name": "Death Chamber",
+                "dir": "death-chamber",
+                "img": "/icons/levels/death_chamber_available.png"
+            },
+            {
+                "name": "Meteor Herd",
+                "dir": "meteor-herd",
+                "img": "/icons/levels/meteor_herd_available.png"
+            }
+        ]
+    },
+    "Shadow": {
+        "dir": "/public/stages/shadow/",
+        "img": "/icons/ShadowMap.png",
+        "subs": [
+            {
+                "name": "Radical Highway",
+                "dir": "radical-highway",
+                "img": "/icons/levels/radical_highway_available.png"
+            },
+            {
+                "name": "White Jungle",
+                "dir": "white-jungle",
+                "img": "/icons/levels/white_jungle_available.png"
+            },
+            {
+                "name": "Sky Rail",
+                "dir": "sky-rail",
+                "img": "/icons/levels/sky_rail_available.png"
+            },
+            {
+                "name": "Final Chase",
+                "dir": "final-chase",
+                "img": "/icons/levels/final_chase_available.png"
+            }
+        ]
+    },
+    "Eggman": {
+        "dir": "/public/stages/eggman/",
+        "img": "/icons/EggmanMap.png",
+        "subs": [
+            {
+                "name": "Iron Gate",
+                "dir": "iron-gate",
+                "img": "/icons/levels/iron_gate_available.png"
+            },
+            {
+                "name": "Sand Ocean",
+                "dir": "sand-ocean",
+                "img": "/icons/levels/sand_ocean_available.png"
+            },
+            {
+                "name": "Lost Colony",
+                "dir": "lost-colony",
+                "img": "/icons/levels/lost_colony_available.png"
+            },
+            {
+                "name": "Weapons Bed",
+                "dir": "weapons-bed",
+                "img": "/icons/levels/weapons_bed_available.png"
+            },
+            {
+                "name": "Cosmic Wall",
+                "dir": "cosmic-wall",
+                "img": "/icons/levels/cosmic_wall_available.png"
+            }
+        ]
+    },
+    "Rouge": {
+        "dir": "/public/stages/rouge/",
+        "img": "/icons/RougeMap.png",
+        "subs": [
+            {
+                "name": "Dry Lagoon",
+                "dir": "dry-lagoon",
+                "img": "/icons/levels/dry_lagoon_available.png"
+            },
+            {
+                "name": "Egg Quarters",
+                "dir": "egg-quarters",
+                "img": "/icons/levels/egg_quarters_available.png"
+            },
+            {
+                "name": "Security Hall",
+                "dir": "security-hall",
+                "img": "/icons/levels/security_hall_available.png"
+            },
+            {
+                "name": "Route 280",
+                "dir": "route-280",
+                "img": "/icons/levels/route_280_available.png"
+            },
+            {
+                "name": "Mad Space",
+                "dir": "mad-space",
+                "img": "/icons/levels/mad_space_available.png"
+            }
+        ]
+    }
+}
