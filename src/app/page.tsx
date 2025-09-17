@@ -74,21 +74,49 @@ export default async function Home() {
       for (const [stageName, s] of Object.entries(c.subs)) {
         items.push({ kind: "divider", level: "stage", title: stageName, icon: s.img });
         const stageAbs = path.join(charAbs, s.dir);
-        const files = await listImages(stageAbs);
         const stageAbbr = s.abbr || normalizeKey(stageName);
         const stageSlug = s.dir;
+        
+        // Unified image processing: handle both regular stage images and finals
+        const files = await listImages(stageAbs);
         for (const f of files) {
           const rel = f.replace(publicDir, "").replace(/\\/g, "/");
           items.push({ kind: "image", src: rel, alt: path.basename(f) });
-          const finalsTokens: string[] = [];
-          // detect finals in path segments
-          const segments = rel.split("/");
-          for (const seg of segments) {
-            for (const [finalSlug, abbr] of finalsEntries) {
-              if (normalizeKey(seg) === normalizeKey(finalSlug)) finalsTokens.push(finalSlug);
-              if (normalizeKey(seg) === normalizeKey(abbr)) finalsTokens.push(abbr);
+          
+          // Detect if this image is in a finals subdirectory
+          const pathSegments = rel.split("/").filter(Boolean);
+          const stageIndex = pathSegments.findIndex(seg => normalizeKey(seg) === normalizeKey(stageSlug));
+          const isInFinals = stageIndex !== -1 && stageIndex + 2 < pathSegments.length; // Need stage + finals dir + filename
+          const finalDirName = isInFinals ? pathSegments[stageIndex + 1] : null;
+          
+          // Check if the subdirectory is a finals directory
+          let finalSlug = null;
+          let finalAbbr = null;
+          if (isInFinals && finalDirName) {
+            for (const [slug, abbr] of finalsEntries) {
+              if (normalizeKey(finalDirName) === normalizeKey(slug) || normalizeKey(finalDirName) === normalizeKey(abbr)) {
+                finalSlug = slug;
+                finalAbbr = abbr;
+                break;
+              }
             }
           }
+          
+          // Build finals tokens
+          const finalsTokens: string[] = [];
+          if (finalSlug && finalAbbr) {
+            finalsTokens.push(finalSlug, finalAbbr);
+          } else {
+            // For regular stage images, detect finals in path segments (legacy behavior)
+            for (const seg of pathSegments) {
+              for (const [slug, abbr] of finalsEntries) {
+                if (normalizeKey(seg) === normalizeKey(slug)) finalsTokens.push(slug);
+                if (normalizeKey(seg) === normalizeKey(abbr)) finalsTokens.push(abbr);
+              }
+            }
+          }
+          
+          // Set metadata - all images from a stage (including finals) belong to that stage
           metaBySrc[rel] = {
             characterName,
             characterAbbr,
