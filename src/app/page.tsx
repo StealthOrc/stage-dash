@@ -6,7 +6,7 @@ import { normalizeKey } from "./_components/search/fuzzy";
 
 type ImageEntry = { src: string; alt: string };
 type GalleryConfig = {
-  finals: Array<{ slug: string; abbr: string }>;
+  finals: Array<{ slug: string; abbr: string; img: string }>;
   dirs: Record<string, {
     abbr?: string;
     dir: string;

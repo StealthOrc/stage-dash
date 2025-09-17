@@ -2,39 +2,48 @@
     "finals": [
         {
             "slug": "animal",
-            "abbr": "an"
+            "abbr": "an",
+            "img": "/icons/checks/ap_animals.png"
         },
         {
             "slug": "big",
-            "abbr": "big"
+            "abbr": "big",
+            "img": "/icons/checks/ap_big.png"
         },
         {
             "slug": "chaobox",
-            "abbr": "cb"
+            "abbr": "cb",
+            "img": "/icons/checks/ap_chao_key.png"
         },
         {
             "slug": "gold-beetle",
-            "abbr": "gb"
+            "abbr": "gb",
+            "img": "/icons/checks/ap_gold_beetle.png"
         },
         {
             "slug": "hidden",
-            "abbr": "hd"
+            "abbr": "hd",
+            "img": "/icons/checks/ap_hidden_check.png"
         },
         {
             "slug": "item-box",
-            "abbr": "ib"
+            "abbr": "ib",
+            "img": "/icons/checks/ap_itembox.png"
         },
         {
             "slug": "life-box",
-            "abbr": "lb"
+            "abbr": "lb",
+            "img": "/icons/checks/ap_lifebox.png"
         },
         {
             "slug": "omochao",
-            "abbr": "omo"
+            "abbr": "omo",
+            "img": "/icons/checks/ap_omochao.png"
         },
         {
             "slug": "pipe",
-            "abbr": "pi"
+            "abbr": "pi",
+            "img": "/icons/checks/ap_chao_pipe.png"
         }
     ],
     "dirs": {

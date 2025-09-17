@@ -7,7 +7,7 @@ import { fuzzyIncludes, normalizeKey } from "./search/fuzzy";
 import type { ImageMeta } from "../page";
 
 type GalleryConfig = {
-  finals: Array<{ slug: string; abbr: string }>;
+  finals: Array<{ slug: string; abbr: string; img: string }>;
   dirs: Record<string, {
     abbr?: string;
     dir: string;
@@ -241,7 +241,7 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
     return acc;
   }, [items, query]);
 
-  return <MasonryGallery items={filtered} />;
+  return <MasonryGallery items={filtered} metaBySrc={metaBySrc} galleryConfig={galleryConfig} />;
 }
 
 

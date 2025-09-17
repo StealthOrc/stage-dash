@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import MasonryImageItem from "./MasonryImageItem";
+import type { ImageMeta } from "../page";
 
 export type MasonryImage = { kind: "image"; src: string; alt: string };
 export type MasonryDivider = {
@@ -12,12 +13,28 @@ export type MasonryDivider = {
 };
 export type MasonryItem = MasonryImage | MasonryDivider;
 
+type GalleryConfig = {
+  finals: Array<{ slug: string; abbr: string; img: string }>;
+  dirs: Record<string, {
+    abbr?: string;
+    dir: string;
+    img: string;
+    subs?: Record<string, {
+      abbr?: string;
+      dir: string;
+      img: string;
+    }>;
+  }>;
+};
+
 type Props = {
 	items: MasonryItem[];
 	batchSize?: number;
+	metaBySrc?: Record<string, ImageMeta>;
+	galleryConfig?: GalleryConfig;
 };
 
-export default function MasonryGallery({ items, batchSize = 60 }: Props) {
+export default function MasonryGallery({ items, batchSize = 60, metaBySrc, galleryConfig }: Props) {
 	const [count, setCount] = useState(Math.min(batchSize, items.length));
 	const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,6 +56,26 @@ export default function MasonryGallery({ items, batchSize = 60 }: Props) {
 	}, [items.length, batchSize]);
 
 	const visible = items.slice(0, count);
+
+	// Function to get the icon for an image based on its metadata
+	const getIconForImage = (src: string): string | undefined => {
+		if (!metaBySrc || !galleryConfig) return undefined;
+		
+		const meta = metaBySrc[src];
+		if (!meta || !meta.finalsTokens || meta.finalsTokens.length === 0) return undefined;
+		
+		// Find the first finals token that matches a finals configuration
+		for (const token of meta.finalsTokens) {
+			const finalConfig = galleryConfig.finals.find(f => 
+				f.slug === token || f.abbr === token
+			);
+			if (finalConfig) {
+				return finalConfig.img;
+			}
+		}
+		
+		return undefined;
+	};
 
 	return (
 		<div className="w-full">
@@ -63,6 +100,7 @@ export default function MasonryGallery({ items, batchSize = 60 }: Props) {
 							key={it.src}
 							src={it.src}
 							alt={it.alt}
+							icon={getIconForImage(it.src)}
 						/>
 					);
 				})}

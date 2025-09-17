@@ -3,9 +3,10 @@
 interface MasonryImageItemProps {
   src: string;
   alt: string;
+  icon?: string;
 }
 
-export default function MasonryImageItem({ src, alt }: MasonryImageItemProps) {
+export default function MasonryImageItem({ src, alt, icon }: MasonryImageItemProps) {
   // Extract image number from filename
   const extractImageNumber = (filename: string): string => {
     // Remove file extension
@@ -43,21 +44,34 @@ export default function MasonryImageItem({ src, alt }: MasonryImageItemProps) {
           {/* Top section - 1/5 height */}
           <div className="h-1/5"></div>
           
-          {/* Middle section - 3/5 height */}
-          <div className="h-3/5"></div>
+          {/* Middle section - 2/5 height */}
+          <div className="h-2/5"></div>
           
-          {/* Bottom section - 1/5 height with right-aligned content */}
-          <div className="h-1/5 flex items-center justify-end pr-2 pb-1">
+          {/* Bottom section - 2/5 height with right-aligned content */}
+          <div className="h-2/5 flex items-end justify-end pr-1 pb-1">
             {imageNumber && (
-              <div className="text-white text-shadow-lg bg-black/50 rounded-lg px-2 py-1">
-                <span className="text-xl font-semibold">
-                  {imageNumber.split('.')[0]}.
-                </span>
-                {imageNumber.includes('.') && (
-                  <span className="text-sm">
-                    {imageNumber.split('.')[1]}
-                  </span>
+              <div className="aspect-[4/4] h-full grid grid-cols-1 grid-rows-1 place-items-end">
+                {/* Icon - positioned in the grid cell */}
+                {icon && (
+                  <img 
+                    src={icon} 
+                    alt="" 
+                    className="w-full h-full object-contain row-[1] col-[1]"
+                  />
                 )}
+                {/* Number overlay - positioned in the same grid cell, overlapping the icon */}
+                <div className="text-white text-shadow-lg bg-black/50 rounded-lg px-2 py-1 flex items-center gap-2 col-start-1 row-start-1 row-[1] col-[1] mr-1.5 mb-1.5">
+                  <div>
+                    <span className="text-2xl font-semibold">
+                      {imageNumber.split('.')[0]}.
+                    </span>
+                    {imageNumber.includes('.') && (
+                      <span className="text-sm">
+                        {imageNumber.split('.')[1]}
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
           </div>
