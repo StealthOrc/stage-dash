@@ -1,14 +1,31 @@
 import fs from "fs/promises";
 import path from "path";
-import MasonryGallery, { type MasonryItem } from "./_components/MasonryGallery";
+import { type MasonryItem } from "./_components/MasonryGallery";
+import FilteredMasonry from "./_components/FilteredMasonry";
+import { normalizeKey } from "./_components/search/fuzzy";
 
 type ImageEntry = { src: string; alt: string };
 type GalleryConfig = {
-  [character: string]: {
+  finals: Array<{ slug: string; abbr: string }>;
+  dirs: Record<string, {
+    abbr?: string;
     dir: string;
     img: string;
-    subs: Array<{ name: string; dir: string; img: string }>;
-  };
+    subs?: Record<string, {
+      abbr?: string;
+      dir: string;
+      img: string;
+    }>;
+  }>;
+};
+
+export type ImageMeta = {
+  characterName: string;
+  characterAbbr: string;
+  stageName?: string;
+  stageAbbr?: string;
+  stageSlug?: string;
+  finalsTokens: string[]; // slugs/abbrs of final folders in path
 };
 
 async function getImagesFromStages(): Promise<ImageEntry[]> {
@@ -43,19 +60,43 @@ export default async function Home() {
 
   const publicDir = path.join(process.cwd(), "public");
 
+  const finalsEntries = (cfg.finals || []).map((f) => [f.slug, f.abbr] as const);
+
   const items: MasonryItem[] = [];
-  for (const [character, c] of Object.entries(cfg)) {
-    items.push({ kind: "divider", level: "character", title: character, icon: c.img });
+  const metaBySrc: Record<string, ImageMeta> = {};
+
+  for (const [characterName, c] of Object.entries(cfg.dirs)) {
+    items.push({ kind: "divider", level: "character", title: characterName, icon: c.img });
+    const characterAbbr = c.abbr || normalizeKey(characterName);
     const charAbs = path.join(process.cwd(), c.dir.replace(/^\/(public\/)?/, "public/"));
 
-    if (c.subs && c.subs.length > 0) {
-      for (const s of c.subs) {
-        items.push({ kind: "divider", level: "stage", title: s.name, icon: s.img });
+    if (c.subs && Object.keys(c.subs).length > 0) {
+      for (const [stageName, s] of Object.entries(c.subs)) {
+        items.push({ kind: "divider", level: "stage", title: stageName, icon: s.img });
         const stageAbs = path.join(charAbs, s.dir);
         const files = await listImages(stageAbs);
+        const stageAbbr = s.abbr || normalizeKey(stageName);
+        const stageSlug = s.dir;
         for (const f of files) {
           const rel = f.replace(publicDir, "").replace(/\\/g, "/");
           items.push({ kind: "image", src: rel, alt: path.basename(f) });
+          const finalsTokens: string[] = [];
+          // detect finals in path segments
+          const segments = rel.split("/");
+          for (const seg of segments) {
+            for (const [finalSlug, abbr] of finalsEntries) {
+              if (normalizeKey(seg) === normalizeKey(finalSlug)) finalsTokens.push(finalSlug);
+              if (normalizeKey(seg) === normalizeKey(abbr)) finalsTokens.push(abbr);
+            }
+          }
+          metaBySrc[rel] = {
+            characterName,
+            characterAbbr,
+            stageName,
+            stageAbbr,
+            stageSlug,
+            finalsTokens,
+          };
         }
       }
     } else {
@@ -63,11 +104,24 @@ export default async function Home() {
       for (const f of files) {
         const rel = f.replace(publicDir, "").replace(/\\/g, "/");
         items.push({ kind: "image", src: rel, alt: path.basename(f) });
+        const finalsTokens: string[] = [];
+        const segments = rel.split("/");
+        for (const seg of segments) {
+          for (const [finalSlug, abbr] of finalsEntries) {
+            if (normalizeKey(seg) === normalizeKey(finalSlug)) finalsTokens.push(finalSlug);
+            if (normalizeKey(seg) === normalizeKey(abbr)) finalsTokens.push(abbr);
+          }
+        }
+        metaBySrc[rel] = {
+          characterName,
+          characterAbbr,
+          finalsTokens,
+        };
       }
     }
   }
 
-  return <MasonryGallery items={items} />;
+  return <FilteredMasonry items={items} metaBySrc={metaBySrc} />;
 }
 
 async function listImages(absDir: string): Promise<string[]> {
