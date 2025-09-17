@@ -35,23 +35,85 @@ export default function FilteredMasonry({ items, metaBySrc }: Props) {
       ? q.slice(1).trim().split(/\s+/).map((t) => normalizeKey(t)).filter(Boolean)
       : [];
 
-    function matchesCommand(src: string): boolean {
+    function matchesCommand(src: string, alt?: string): boolean {
       if (!isCommand) return false;
       if (!metaBySrc) return false;
       const meta = metaBySrc[src];
       if (!meta) return false;
-      // All tokens must match something about the image
-      return tokens.every((t) => {
+
+      // Separate abbreviation tokens from fuzzy search tokens
+      const abbreviationTokens: string[] = [];
+      const fuzzyTokens: string[] = [];
+      
+      // Try to match each token as an abbreviation first
+      for (const token of tokens) {
+        let isAbbreviation = false;
+        
+        // Check character abbreviation
+        if (token === normalizeKey(meta.characterAbbr) || token === normalizeKey(meta.characterName)) {
+          abbreviationTokens.push(token);
+          isAbbreviation = true;
+        }
+        // Check stage abbreviation
+        else if (meta.stageName && (
+          token === normalizeKey(meta.stageAbbr || "") || 
+          token === normalizeKey(meta.stageName) || 
+          token === normalizeKey(meta.stageSlug || "")
+        )) {
+          abbreviationTokens.push(token);
+          isAbbreviation = true;
+        }
+        // Check finals abbreviations
+        else if (meta.finalsTokens && meta.finalsTokens.some((ft) => normalizeKey(ft) === token)) {
+          abbreviationTokens.push(token);
+          isAbbreviation = true;
+        }
+        
+        // If not an abbreviation, treat as fuzzy search term
+        if (!isAbbreviation) {
+          fuzzyTokens.push(token);
+        }
+      }
+
+      // All abbreviation tokens must match (character, stage, or finals)
+      const abbreviationMatches = abbreviationTokens.length > 0 && abbreviationTokens.every((token) => {
         // character
-        if (t === normalizeKey(meta.characterAbbr) || t === normalizeKey(meta.characterName)) return true;
+        if (token === normalizeKey(meta.characterAbbr) || token === normalizeKey(meta.characterName)) return true;
         // stage
         if (meta.stageName) {
-          if (t === normalizeKey(meta.stageAbbr || "") || t === normalizeKey(meta.stageName) || t === normalizeKey(meta.stageSlug || "")) return true;
+          if (token === normalizeKey(meta.stageAbbr || "") || token === normalizeKey(meta.stageName) || token === normalizeKey(meta.stageSlug || "")) return true;
         }
         // finals
-        if (meta.finalsTokens && meta.finalsTokens.some((ft) => normalizeKey(ft) === t)) return true;
+        if (meta.finalsTokens && meta.finalsTokens.some((ft) => normalizeKey(ft) === token)) return true;
         return false;
       });
+
+      // All fuzzy tokens must match the filename, path segments, or directory names
+      const fuzzyMatches = fuzzyTokens.length === 0 || fuzzyTokens.every((token) => {
+        const fileName = alt || src;
+        const fullPath = src; // This includes the full path like "/stages/sonic/city-escape/..."
+        
+        // Search in filename
+        if (fuzzyIncludes(token, fileName)) return true;
+        
+        // Search in individual path segments (split by /)
+        const pathSegments = fullPath.split('/').filter(Boolean);
+        for (const segment of pathSegments) {
+          if (fuzzyIncludes(token, segment)) return true;
+        }
+        
+        // Search in character name
+        if (fuzzyIncludes(token, meta.characterName)) return true;
+        
+        // Search in stage name and slug
+        if (meta.stageName) {
+          if (fuzzyIncludes(token, meta.stageName) || fuzzyIncludes(token, meta.stageSlug || "")) return true;
+        }
+        
+        return false;
+      });
+
+      return abbreviationMatches && fuzzyMatches;
     }
 
     for (const it of items) {
@@ -67,10 +129,41 @@ export default function FilteredMasonry({ items, metaBySrc }: Props) {
 
       let match = false;
       if (isCommand) {
-        match = matchesCommand(it.src);
+        match = matchesCommand(it.src, it.alt);
       } else {
         const name = it.alt || it.src;
-        match = fuzzyIncludes(q, name);
+        const fullPath = it.src;
+        
+        // Split query into individual terms for multi-term fuzzy search
+        const searchTerms = q.trim().split(/\s+/).filter(Boolean);
+        
+        // All terms must match somewhere in the filename, path segments, or metadata
+        match = searchTerms.every((term) => {
+          // Search in filename
+          if (fuzzyIncludes(term, name)) return true;
+          
+          // Search in path segments and metadata
+          if (metaBySrc) {
+            const meta = metaBySrc[it.src];
+            if (meta) {
+              // Search in individual path segments (split by /)
+              const pathSegments = fullPath.split('/').filter(Boolean);
+              for (const segment of pathSegments) {
+                if (fuzzyIncludes(term, segment)) return true;
+              }
+              
+              // Search in character name
+              if (fuzzyIncludes(term, meta.characterName)) return true;
+              
+              // Search in stage name and slug
+              if (meta.stageName) {
+                if (fuzzyIncludes(term, meta.stageName) || fuzzyIncludes(term, meta.stageSlug || "")) return true;
+              }
+            }
+          }
+          
+          return false;
+        });
       }
       if (match) {
         if (lastCharacterDivider) {
