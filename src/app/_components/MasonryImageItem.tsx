@@ -47,32 +47,31 @@ export default function MasonryImageItem({ src, alt, icon }: MasonryImageItemPro
           {/* Middle section - 2/5 height */}
           <div className="h-2/5"></div>
           
-          {/* Bottom section - 2/5 height with right-aligned content */}
-          <div className="h-2/5 flex items-end justify-end pr-1 pb-1">
+          {/* Bottom section - 2/5 height with left and right aligned content */}
+          <div className="h-2/5 flex items-end justify-between px-2 pb-1">
+            {/* Number on the left */}
             {imageNumber && (
-              <div className="aspect-[4/4] h-full grid grid-cols-1 grid-rows-1 place-items-end">
-                {/* Icon - positioned in the grid cell */}
-                {icon && (
-                  <img 
-                    src={icon} 
-                    alt="" 
-                    className="w-full h-full object-contain row-[1] col-[1]"
-                  />
-                )}
-                {/* Number overlay - positioned in the same grid cell, overlapping the icon */}
-                <div className="text-white text-shadow-lg bg-black/50 rounded-lg px-2 py-1 flex items-center gap-2 col-start-1 row-start-1 row-[1] col-[1] mr-1.5 mb-1.5">
-                  <div>
-                    <span className="text-2xl font-semibold">
-                      {imageNumber.split('.')[0]}.
+              <div className="text-white text-shadow-lg bg-black/50 rounded-lg px-2 py-1 flex items-center gap-2">
+                <div>
+                  <span className="text-2xl font-semibold">
+                    {imageNumber.split('.')[0]}.
+                  </span>
+                  {imageNumber.includes('.') && (
+                    <span className="text-sm">
+                      {imageNumber.split('.')[1]}
                     </span>
-                    {imageNumber.includes('.') && (
-                      <span className="text-sm">
-                        {imageNumber.split('.')[1]}
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
+            )}
+            
+            {/* Icon on the right */}
+            {icon && (
+              <img 
+                src={icon} 
+                alt="" 
+                className="h-full object-contain"
+              />
             )}
           </div>
         </div>
