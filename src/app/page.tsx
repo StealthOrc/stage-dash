@@ -121,7 +121,7 @@ export default async function Home() {
     }
   }
 
-  return <FilteredMasonry items={items} metaBySrc={metaBySrc} />;
+  return <FilteredMasonry items={items} metaBySrc={metaBySrc} galleryConfig={cfg} />;
 }
 
 async function listImages(absDir: string): Promise<string[]> {
