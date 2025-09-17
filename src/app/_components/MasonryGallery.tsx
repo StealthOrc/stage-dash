@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import MasonryImageItem from "./MasonryImageItem";
 
 export type MasonryImage = { kind: "image"; src: string; alt: string };
 export type MasonryDivider = {
@@ -58,16 +59,11 @@ export default function MasonryGallery({ items, batchSize = 60 }: Props) {
 					}
 
 					return (
-						<figure key={it.src} className="relative glass overflow-hidden rounded-lg">
-							<div className="aspect-[4/3] w-full">
-								<img
-									src={it.src}
-									alt={it.alt}
-									loading="lazy"
-									className="h-full w-full object-cover"
-								/>
-							</div>
-						</figure>
+						<MasonryImageItem
+							key={it.src}
+							src={it.src}
+							alt={it.alt}
+						/>
 					);
 				})}
 			</div>
