@@ -132,12 +132,12 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
     }
     
     // Helper function for abbreviation search on a single token
-    function abbreviationSearchToken(token: string, meta: any): boolean {
+    function abbreviationSearchToken(token: string, meta: ImageMeta): boolean {
       // character
       if (token === normalizeKey(meta.characterAbbr) || token === normalizeKey(meta.characterName)) return true;
       // stage
       if (meta.stageName) {
-        if (token === normalizeKey(meta.stageAbbr || "") || token === normalizeKey(meta.stageName) || token === normalizeKey(meta.stageSlug || "")) return true;
+        if (token === normalizeKey(meta.stageAbbr ?? "") || token === normalizeKey(meta.stageName) || token === normalizeKey(meta.stageSlug ?? "")) return true;
       }
       // finals
       if (meta.finalsTokens && meta.finalsTokens.some((ft: string) => normalizeKey(ft) === token)) return true;
@@ -145,7 +145,7 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
     }
     
     // Helper function for fuzzy search on a single token
-    function fuzzySearchToken(token: string, src: string, alt: string | undefined, meta: any): boolean {
+    function fuzzySearchToken(token: string, src: string, alt: string | undefined, meta: ImageMeta): boolean {
       const fileName = alt || src;
       const fullPath = src;
       
@@ -163,7 +163,7 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
       
       // Search in stage name and slug
       if (meta.stageName) {
-        if (fuzzyIncludes(token, meta.stageName) || fuzzyIncludes(token, meta.stageSlug || "")) return true;
+        if (fuzzyIncludes(token, meta.stageName) || fuzzyIncludes(token, meta.stageSlug ?? "")) return true;
       }
       
       return false;
@@ -210,7 +210,7 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
               
               // Search in stage name and slug
               if (meta.stageName) {
-                if (fuzzyIncludes(term, meta.stageName) || fuzzyIncludes(term, meta.stageSlug || "")) return true;
+                if (fuzzyIncludes(term, meta.stageName) || fuzzyIncludes(term, meta.stageSlug ?? "")) return true;
               }
             }
           }
