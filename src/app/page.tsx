@@ -56,25 +56,25 @@ export default async function Home() {
   // Read configuration
   const configPath = path.join(process.cwd(), "src/app/gallery.json");
   const configRaw = await fs.readFile(configPath, "utf8");
-  const cfg: GalleryConfig = JSON.parse(configRaw);
+  const cfg: GalleryConfig = JSON.parse(configRaw) as GalleryConfig;
 
   const publicDir = path.join(process.cwd(), "public");
 
-  const finalsEntries = (cfg.finals || []).map((f) => [f.slug, f.abbr] as const);
+  const finalsEntries = (cfg.finals ?? []).map((f) => [f.slug, f.abbr] as const);
 
   const items: MasonryItem[] = [];
   const metaBySrc: Record<string, ImageMeta> = {};
 
   for (const [characterName, c] of Object.entries(cfg.dirs)) {
     items.push({ kind: "divider", level: "character", title: characterName, icon: c.img });
-    const characterAbbr = c.abbr || normalizeKey(characterName);
+    const characterAbbr = c.abbr ?? normalizeKey(characterName);
     const charAbs = path.join(process.cwd(), c.dir.replace(/^\/(public\/)?/, "public/"));
 
     if (c.subs && Object.keys(c.subs).length > 0) {
       for (const [stageName, s] of Object.entries(c.subs)) {
         items.push({ kind: "divider", level: "stage", title: stageName, icon: s.img });
         const stageAbs = path.join(charAbs, s.dir);
-        const stageAbbr = s.abbr || normalizeKey(stageName);
+        const stageAbbr = s.abbr ?? normalizeKey(stageName);
         const stageSlug = s.dir;
         
         // Unified image processing: handle both regular stage images and finals
