@@ -62,7 +62,7 @@ export default function MasonryGallery({ items, batchSize = 60, metaBySrc, galle
 		if (!metaBySrc || !galleryConfig) return undefined;
 		
 		const meta = metaBySrc[src];
-		if (!meta || !meta.finalsTokens || meta.finalsTokens.length === 0) return undefined;
+		if (!meta?.finalsTokens?.length) return undefined;
 		
 		// Find the first finals token that matches a finals configuration
 		for (const token of meta.finalsTokens) {

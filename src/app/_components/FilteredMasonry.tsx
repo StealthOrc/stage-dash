@@ -140,13 +140,13 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
         if (token === normalizeKey(meta.stageAbbr ?? "") || token === normalizeKey(meta.stageName) || token === normalizeKey(meta.stageSlug ?? "")) return true;
       }
       // finals
-      if (meta.finalsTokens && meta.finalsTokens.some((ft: string) => normalizeKey(ft) === token)) return true;
+      if (meta.finalsTokens?.some((ft: string) => normalizeKey(ft) === token)) return true;
       return false;
     }
     
     // Helper function for fuzzy search on a single token
     function fuzzySearchToken(token: string, src: string, alt: string | undefined, meta: ImageMeta): boolean {
-      const fileName = alt || src;
+      const fileName = alt ?? src;
       const fullPath = src;
       
       // Search in filename
@@ -239,7 +239,7 @@ export default function FilteredMasonry({ items, metaBySrc, galleryConfig }: Pro
       }
     }
     return acc;
-  }, [items, query]);
+  }, [items, query, galleryConfig.dirs, galleryConfig.finals, metaBySrc]);
 
   return <MasonryGallery items={filtered} metaBySrc={metaBySrc} galleryConfig={galleryConfig} />;
 }

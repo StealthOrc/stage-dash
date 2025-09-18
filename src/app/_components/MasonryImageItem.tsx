@@ -13,7 +13,8 @@ export default function MasonryImageItem({ src, alt, icon }: MasonryImageItemPro
     const nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
     
     // Match patterns like "animal_6" or "animal_7_2"
-    const match = nameWithoutExt.match(/(\d+)(?:_(\d+))?$/);
+    const regex = /(\d+)(?:_(\d+))?$/;
+    const match = regex.exec(nameWithoutExt);
     
     if (!match) return "";
     
